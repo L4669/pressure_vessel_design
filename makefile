@@ -15,9 +15,6 @@ OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 $(ODIR)/%.o: %.c
 		$(CC) -c -o $@ $< $(CFLAGS) $(LIBS)
 
-#$(ODIR)/%.o: $(LDIR)/%.c
-		$(CC) -c -o $@ $< $(CFLAGS)
-
 pvd: $(OBJ)
 		gcc -o $@ $^ $(CFLAGS) $(LIBS)
 
