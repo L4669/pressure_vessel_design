@@ -50,7 +50,6 @@ void title_message(char *message)
     printf("\033[0m");
 }
 
-
 // generates a list of options with integer index
 // return integer index corresponding to seleted option
 int menu_generator(const char *menu[], char *title, char *selection_message, 
@@ -62,6 +61,8 @@ int menu_generator(const char *menu[], char *title, char *selection_message,
     
     if(buffer == NULL)
     {
+        free(title);
+        free(selection_message);
         error_message("Error: Unable to allocate memory");
         exit_message("Exiting PVD Tool");
         exit(EXIT_FAILURE);
@@ -78,6 +79,8 @@ int menu_generator(const char *menu[], char *title, char *selection_message,
 
         if (!fgets(buffer, MAX_MEMORY, stdin))
         {
+            free(title);
+            free(selection_message);
             error_message("Error: fget reading from stdin");
             exit(EXIT_FAILURE);
         }
@@ -111,19 +114,20 @@ int menu_generator(const char *menu[], char *title, char *selection_message,
 
     if(success_flag == 1 && ret == 0)
     {
+        free(title);
+        free(selection_message);
         exit_message("Exiting PVD Tool");
         exit(EXIT_SUCCESS);
     }
     else
     {
         index = ret;
-        //printf("Selected by you: %s\n", menu[index-1]);
     }
 
     return index;
 }
 
-
+// reading floating point numbers from stdin
 double double_input_reader(int *success_flag)
 {
     double ret = 0;
@@ -139,6 +143,7 @@ double double_input_reader(int *success_flag)
         
     if (!fgets(buffer, MAX_MEMORY, stdin))
     {
+        free(buffer);
         error_message("Error: fget reading from stdin");
         exit_message("Exiting PVD Tool");
         exit(EXIT_FAILURE);
@@ -172,6 +177,7 @@ double double_input_reader(int *success_flag)
 
     if(*success_flag == 1 && ret == 0)
     {
+        free(buffer);
         exit_message("Exiting PVD Tool");
         exit(EXIT_SUCCESS);
     }
@@ -188,6 +194,7 @@ void program_continue_confirmation()
     
     if(buffer == NULL)
     {
+        free(buffer);
         error_message("Error: Unable to allocate memory");
         exit_message("Exiting PVD Tool");
         exit(EXIT_FAILURE);
@@ -199,6 +206,7 @@ void program_continue_confirmation()
         user_input_message("(*) Do you want to continue further (yes/no): ");
         if (!fgets(buffer, MAX_MEMORY, stdin))
         {
+            free(buffer);
             error_message("Error: fget reading from stdin");
             exit(EXIT_FAILURE);
         }
@@ -228,9 +236,10 @@ void mechanical_property_reader(int index_material, const char *material_type[],
 {
     int ret = 0;
     
-    FILE *fp = fopen ("material.db", "r");
+    FILE *fp = fopen("material.db", "r");
     if (fp == NULL)
     {
+        free(buffer);
         error_message("Error: Opening material database");
         exit_message("Exiting PVD Tool");
         exit(EXIT_FAILURE);
@@ -247,6 +256,8 @@ void mechanical_property_reader(int index_material, const char *material_type[],
         }
         else if (ret != 4) //replace 4 with const variable on top
         {
+            free(buffer);
+            fclose(fp);
             error_message("Error: material database format wrong");
             exit_message("Exiting PVD Tool");
             exit(EXIT_FAILURE);
@@ -258,8 +269,8 @@ void mechanical_property_reader(int index_material, const char *material_type[],
                 break;
         }
     }
+    fclose(fp);
 }
-
 
 // Volume or Internal Diameter
 double get_sphere_diameter()
@@ -271,6 +282,7 @@ double get_sphere_diameter()
     
     if(buffer == NULL)
     {
+        free(buffer);
         error_message("Error: Unable to allocate memory");
         exit_message("Exiting PVD Tool");
         exit(EXIT_FAILURE);
@@ -283,6 +295,7 @@ double get_sphere_diameter()
                 " Internal Diameter (vol/dia): ");
         if (!fgets(buffer, MAX_MEMORY, stdin))
         {
+            free(buffer);
             error_message("Error: fget reading from stdin");
             exit(EXIT_FAILURE);
         }
@@ -296,7 +309,6 @@ double get_sphere_diameter()
                 volume = double_input_reader(&success_flag_2);
             } while(!success_flag_2);
             
-            // V = (4/3)*PI*R**3
             double radius = 3*volume*0.001/4/M_PI;
             internal_diameter = 2*pow(radius , 1.0/3.0);
             success_flag = 1;

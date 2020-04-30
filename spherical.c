@@ -49,7 +49,6 @@ int spherical(int index_operation, double yield_strength,
         } while(!success_flag);
 
         fos_ys = ret_double;
-        //printf("Factor of Safety on YS: %0.1f\n", fos_ys);
 
         success_flag = 0;
         do
@@ -59,7 +58,6 @@ int spherical(int index_operation, double yield_strength,
         } while(!success_flag);
 
         fos_uts = ret_double;
-        //printf("Factor of Safety on UTS: %0.1f\n", fos_uts);
 
         success_flag = 0;
         do
@@ -69,7 +67,6 @@ int spherical(int index_operation, double yield_strength,
         } while(!success_flag);
 
         weld_efficiency = ret_double;
-        //printf("Weld Efficiency: %0.1f\n", weld_efficiency);
 
         success_flag = 0;
         do
@@ -79,11 +76,9 @@ int spherical(int index_operation, double yield_strength,
         } while(!success_flag);
 
         pressure = ret_double*pow(10, 5); // bar to Pa
-        //printf("Pressure: %f\n", pressure);
 
         // Volume or Internal Diameter
         internal_diameter = get_sphere_diameter();
-        //printf("Diameter (m): %f\n", internal_diameter);
 
         // menu to select technique
         strcpy(title, "[*] List of Design Methods:");
@@ -126,5 +121,7 @@ int spherical(int index_operation, double yield_strength,
         }
     }
 
+    free(title);
+    free(selection_message);
     return 1;
 }
