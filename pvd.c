@@ -1,6 +1,21 @@
 /*
  * Pressure Vessel Design (PVD) Tool - based on analytcal methods (NO FEM)
  * Supports standard geometry found in engineering application
+ * 
+ * Copyright (C) <2020>  <L><N>
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
@@ -9,6 +24,17 @@
 
 int main(int argc, char *argv[])
 {
+    // Introduction & License Information
+    char intro[] = "Pressure Vessel Design Tool for Standard Shapes\n"  
+        "Copyright (C) <2020>  <L><N> \n"
+        "This program comes with ABSOLUTELY NO WARRANTY;\n"
+        "This is free software, and you are welcome to \n"
+        "redistribute it under certain conditions;\n"
+        "see http://www.gnu.org/licenses for details.\n";
+    printf("************************************************\n");
+    printf("%s", intro);
+    printf("************************************************\n");
+
     //Type of Vessels
     const int max_type_vessel = 4;
     const char *vessel_type[] = {"Sphere", "Cylinder", "Cone", "Torus"};
@@ -65,9 +91,6 @@ int main(int argc, char *argv[])
 
     mechanical_property_reader(index_material, material_type, material_name,
         &density, &ultimate_strength, &yield_strength);
-    
-    //printf("%s %lf %lf %lf\n", material_name, density, ultimate_strength, 
-    //        yield_strength);
     
     free(material_name);
     
