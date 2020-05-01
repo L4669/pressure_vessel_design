@@ -88,7 +88,7 @@ int spherical(int index_operation, double yield_strength,
                 selection_message, max_type_methods);
 
         // Implement equations
-        double t_ys = 0, t_uts = 0;
+        double t_ys = 0, t_uts = 0, t_bpvc=0;
         switch(index_method)
         {
             case 1: 
@@ -111,7 +111,17 @@ int spherical(int index_operation, double yield_strength,
                 printf("Method yet to be implemented\n");
                 break;
             case 3:
-                printf("Method yet to be implemented\n");
+		if(fos_uts*pressure < 0.665*ultimate_strength*weld_efficiency)
+		{
+		t_bpvc= fos_uts*pressure*internal_diameter/\
+		   (2*(2*ultimate_strength*weld_efficiency-0.2*fos_uts*pressure));
+		}
+		else
+		{
+		t_bpvc=(internal_diameter/2)*(exp(0.5*fos_uts*pressure/\
+		  (ultimate_strength*weld_efficiency))-1);
+		}
+		printf("Thickness %f mm\n",t_bpvc*1e3);                
                 break;
             case 4:
                 printf("Method yet to be implemented\n");
