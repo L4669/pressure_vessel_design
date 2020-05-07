@@ -88,7 +88,7 @@ int spherical(int index_operation, double yield_strength,
                 selection_message, max_type_methods);
 
         // Implement equations
-        double t_ys = 0, t_uts = 0;
+        double t_ys = 0, t_uts = 0, t_bpvc=0, max_allowable_stress=0;
         switch(index_method)
         {
             case 1: 
@@ -111,7 +111,22 @@ int spherical(int index_operation, double yield_strength,
                 printf("Method yet to be implemented\n");
                 break;
             case 3:
-                printf("Method yet to be implemented\n");
+	// Section II, Mandatory Appendix 1
+		max_allowable_stress=((ultimate_strength/3.5)<(2*yield_strength/3)?\
+				       (ultimate_strength/3.5):(2*yield_strength/3));
+		if(fos_uts*pressure < 0.665*max_allowable_stress*weld_efficiency)
+		{
+	// Section VIII, UG - 27 of BPVC Document
+		t_bpvc= fos_uts*pressure*internal_diameter/\
+		   (2*(2*max_allowable_stress*weld_efficiency-0.2*fos_uts*pressure));
+		}
+		else
+		{
+	// Section VIII, Mandatory Appendix 1 (1-3)
+		    t_bpvc=(internal_diameter/2)*(exp(0.5*fos_uts*pressure/\
+		    (max_allowable_stress*weld_efficiency))-1);
+		}
+		printf("Thickness %f mm\n",t_bpvc*1e3);                
                 break;
             case 4:
                 printf("Method yet to be implemented\n");
