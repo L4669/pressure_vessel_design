@@ -88,7 +88,9 @@ int spherical(int index_operation, double yield_strength,
                 selection_message, max_type_methods);
 
         // Implement equations
-        double t_ys = 0, t_uts = 0, t_bpvc=0, max_allowable_stress=0;
+        double t_ys = 0, t_uts = 0, max_allowable_stress=0, 
+               fos_ys_est, fos_uts_est, stress_std;
+
         switch(index_method)
         {
             case 1: 
@@ -99,12 +101,28 @@ int spherical(int index_operation, double yield_strength,
                 if (t_ys > t_uts)
                 {
                     thickness = t_ys;
-                    printf("Thickness %f mm w.r.t to YS\n", thickness*1e3);
+                    
+                    // standard stress calculation using membrane theory at MEOP
+                    stress_std = pressure*internal_diameter/\
+                               (4*weld_efficiency*thickness);
+                    fos_ys_est = yield_strength/stress_std; 
+                    fos_uts_est = ultimate_strength/stress_std; 
+                    
+                    print_design_results(thickness*1e3, stress_std/1e6, 
+                            fos_ys_est, fos_uts_est, "Based on YS");
                 }
                 else
                 {
                     thickness = t_uts;
-                    printf("Thickness %f mm w.r.t to UTS\n", thickness*1e3);
+                    
+                    // standard stress calculation using membrane theory at MEOP
+                    stress_std = pressure*internal_diameter/\
+                               (4*weld_efficiency*thickness);
+                    fos_ys_est = yield_strength/stress_std; 
+                    fos_uts_est = ultimate_strength/stress_std; 
+                    
+                    print_design_results(thickness*1e3, stress_std/1e6, 
+                            fos_ys_est, fos_uts_est, "Based on UTS");
                 }
                 break;
             case 2:
@@ -112,21 +130,43 @@ int spherical(int index_operation, double yield_strength,
                 break;
             case 3:
 				// Section II, Mandatory Appendix 1
-				max_allowable_stress=((ultimate_strength/3.5)<(2*yield_strength/3)?\
-				       (ultimate_strength/3.5):(2*yield_strength/3));
-				if(fos_uts*pressure < 0.665*max_allowable_stress*weld_efficiency)
+				max_allowable_stress=((ultimate_strength/3.5) <\
+                        (2*yield_strength/3) ? (ultimate_strength/3.5)\
+                        :(2*yield_strength/3));
+				if(pressure < 0.665*max_allowable_stress*weld_efficiency)
 				{
-				// Section VIII, UG - 27 of BPVC Document
-				t_bpvc= fos_uts*pressure*internal_diameter/\
-				   (2*(2*max_allowable_stress*weld_efficiency-0.2*fos_uts*pressure));
+				    // Section VIII, UG - 27 of BPVC Document
+                    thickness = pressure*internal_diameter/\
+                       (2*(2*max_allowable_stress*weld_efficiency-\
+                           0.2*pressure));
 				}
 				else
 				{
-				// Section VIII, Mandatory Appendix 1 (1-3)
-					t_bpvc=(internal_diameter/2)*(exp(0.5*fos_uts*pressure/\
+				    // Section VIII, Mandatory Appendix 1 (1-3)
+					thickness = (internal_diameter/2)*(exp(0.5*pressure/\
 					(max_allowable_stress*weld_efficiency))-1);
 				}
-				printf("Thickness %f mm\n",t_bpvc*1e3);                
+
+                // standard stress calculation using membrane theory at MEOP
+                stress_std = pressure*internal_diameter/\
+                               (4*weld_efficiency*thickness);
+                
+                // fos calculation for YS (traditional way)
+                fos_ys_est = yield_strength/stress_std; 
+                
+                // fos calculation for UTS
+                fos_uts_est = ultimate_strength/stress_std; 
+                
+                if((fos_ys_est >= fos_ys) && (fos_uts_est >= fos_uts))
+                {
+                    print_design_results(thickness*1e3, stress_std/1e6,
+                            fos_ys_est, fos_uts_est, "Success");
+                }
+                else
+                {
+                    print_design_results(thickness*1e3, stress_std/1e6,   
+                            fos_ys_est, fos_uts_est, "User crietria not met");
+                }
                 break;
             case 4:
                 printf("Method yet to be implemented\n");

@@ -41,6 +41,8 @@ void mechanical_property_reader(int index_material, const char *material_type[],
         char *buffer, double *density, double *ultimate_strength,
         double *yield_strength);
 double get_sphere_diameter();
+void print_design_results(double thickness, double stress_meop, 
+        double fos_ys, double fos_uts, char *remarks);
 
 // defined in spherical.c
 int spherical(int index_operation, double yield_strength,

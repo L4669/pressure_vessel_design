@@ -338,3 +338,24 @@ double get_sphere_diameter()
     return internal_diameter;
 }
 
+
+// Display results of the design operation
+
+void print_design_results(double thickness, double stress_meop, 
+        double fos_ys, double fos_uts, char *remarks)
+{
+    printf("************RESULTS*****************\n");
+    printf("====================================\n");
+    printf("%-15s \t %5s\n", "Parameters", "Values");
+    printf("====================================\n");
+    printf("%-15s \t %5.3f\n", "Thickness (mm)", thickness); 
+    printf("------------------------------------\n");
+    printf("%-15s \t %5.3f\n", "Stress @ MEOP (MPa)", stress_meop); 
+    printf("------------------------------------\n");
+    printf("%-15s \t %5.3f\n", "FoS-YS", fos_ys);
+    printf("------------------------------------\n");
+    printf("%-15s \t %5.3f\n", "FoS-UTS", fos_uts);
+    printf("------------------------------------\n");
+    printf("%-15s \t %s\n", "Remarks:", remarks);
+    printf("====================================\n");
+}

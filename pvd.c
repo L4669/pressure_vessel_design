@@ -41,9 +41,12 @@ int main(int argc, char *argv[])
     int index_vessel_type = 0;
     
     // Material Related
-    const int max_type_material = 4;
+    const int max_type_material = 5;
+
+    // by default custom is set to AISI304L properties
+    // can be modified in material database file
     const char *material_type[] = {"AISI304L", "Ti6Al4V_STA", 
-                                    "Ti6Al4V_ANNEALED", "15CdV6"};
+                                    "Ti6Al4V_ANNEALED", "15CdV6", "Custom"};
     int index_material = 0;
 
     double density = 0;
@@ -66,9 +69,6 @@ int main(int argc, char *argv[])
         " of pressure vessel \nor press '0' to exit: ");
     index_vessel_type = menu_generator(vessel_type, title, 
             selection_message, max_type_vessel);
-
-    // Confirmation for continuation of program
-    program_continue_confirmation();
 
     // Material Selection 
     strcpy(title, "[*] Material Selection");
@@ -93,9 +93,6 @@ int main(int argc, char *argv[])
         &density, &ultimate_strength, &yield_strength);
     
     free(material_name);
-    
-    // Confirmation for continuation of program
-    program_continue_confirmation();
     
     // Choice of operations - Design or Verification 
     strcpy(title, "[*] List of Operations");
